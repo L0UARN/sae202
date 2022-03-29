@@ -3,6 +3,14 @@ from time import time
 from math import floor
 
 
+def courbe_x(x):
+    return -2 / (x - 2) - 1
+
+
+def courbe_y(x):
+    return -2 / (x + 1) + 2
+
+
 class Echiquier:
     def __init__(self, hauteur: int, largeur: int) -> None:
         """
@@ -59,8 +67,8 @@ class Echiquier:
                 )
 
                 intermediaire = (
-                    dernier[0] + (prochain[0] - dernier[0]) * (deplacement - 0.5) * 2,
-                    dernier[1] + (prochain[1] - dernier[1]) * (deplacement - 0.5) * 2
+                    dernier[0] + (prochain[0] - dernier[0]) * courbe_x((deplacement - 0.5) * 2),
+                    dernier[1] + (prochain[1] - dernier[1]) * courbe_y((deplacement - 0.5) * 2)
                 )
 
                 pg.draw.line(self.fenetre, (255, 192, 0), dernier, intermediaire, width=4)
