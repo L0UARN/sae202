@@ -24,46 +24,46 @@ class Echiquier:
         self.solution: list[tuple[int]] = []
         self.hauteur = hauteur
         self.largeur = largeur
+        self.unite_x = 800 // self.largeur
+        self.unite_y = 800 // self.hauteur
+        self.image = pg.transform.scale(pg.image.load("cavalier.png"), (self.unite_x * 0.75, self.unite_y * 0.75))
 
     def mettre_a_jour(self) -> None:
         """ Met à jour l'affichage de l'échiquier et dessine le chemin solution s'il est donné.
         """
-        unite_x = 800 // self.largeur
-        unite_y = 800 // self.hauteur
-
         for y in range(self.hauteur):
             for x in range(self.largeur):
                 couleur = (255, 255, 255) if x % 2 == y % 2 else (0, 0, 0)
-                pg.draw.rect(self.fenetre, couleur, pg.Rect(x * unite_x, y * unite_y, unite_x, unite_y))
+                pg.draw.rect(self.fenetre, couleur, pg.Rect(x * self.unite_x, y * self.unite_y, self.unite_x, self.unite_y))
 
         if self.solution:
             progres = time() - self.debut_affichage
-            duree_etape = 0.2
+            duree_etape = 0.5
             duree_totale = len(self.solution) * duree_etape
             quantite_affichee = (progres / duree_totale) * len(self.solution) if progres < duree_totale else len(self.solution)
 
             for i in range(floor(quantite_affichee) - 1):
-                debut = (self.solution[i][0] * unite_x + unite_x // 2), (self.solution[i][1] * unite_y + unite_y // 2)
-                fin = (self.solution[i + 1][0] * unite_x + unite_x // 2), (self.solution[i + 1][1] * unite_y + unite_y // 2)
+                debut = (self.solution[i][0] * self.unite_x + self.unite_x // 2), (self.solution[i][1] * self.unite_y + self.unite_y // 2)
+                fin = (self.solution[i + 1][0] * self.unite_x + self.unite_x // 2), (self.solution[i + 1][1] * self.unite_y + self.unite_y // 2)
                 pg.draw.line(self.fenetre, (255, 192, 0), debut, fin, width=4)
-                pg.draw.circle(self.fenetre, (128, 128, 128), fin, unite_x // 16)
+                pg.draw.circle(self.fenetre, (128, 128, 128), fin, self.unite_x // 16)
 
                 if i == 0:
-                    pg.draw.circle(self.fenetre, (0, 255, 0), debut, unite_x // 4)
+                    pg.draw.circle(self.fenetre, (0, 255, 0), debut, self.unite_x // 4)
                 elif i == len(self.solution) - 2:
-                    pg.draw.circle(self.fenetre, (255, 0, 0), fin, unite_x // 4)
+                    self.fenetre.blit(self.image, (fin[0] - self.unite_y / 4, fin[1] - self.unite_y / 4))
 
             if quantite_affichee % 1 >= 0.5 and floor(quantite_affichee) > 0:
                 deplacement = quantite_affichee % 1
 
                 dernier = (
-                    (self.solution[floor(quantite_affichee - 1)][0] * unite_x + unite_x // 2),
-                    (self.solution[floor(quantite_affichee - 1)][1] * unite_y + unite_y // 2)
+                    (self.solution[floor(quantite_affichee - 1)][0] * self.unite_x + self.unite_x // 2),
+                    (self.solution[floor(quantite_affichee - 1)][1] * self.unite_y + self.unite_y // 2)
                 )
 
                 prochain = (
-                    (self.solution[floor(quantite_affichee)][0] * unite_x + unite_x // 2),
-                    (self.solution[floor(quantite_affichee)][1] * unite_y + unite_y // 2)
+                    (self.solution[floor(quantite_affichee)][0] * self.unite_x + self.unite_x // 2),
+                    (self.solution[floor(quantite_affichee)][1] * self.unite_y + self.unite_y // 2)
                 )
 
                 intermediaire = (
@@ -72,6 +72,9 @@ class Echiquier:
                 )
 
                 pg.draw.line(self.fenetre, (255, 192, 0), dernier, intermediaire, width=4)
+                self.fenetre.blit(self.image, (intermediaire[0] - self.unite_y / 4, intermediaire[1] - self.unite_y / 4))
+            else:
+                self.fenetre.blit(self.image, (self.solution[floor(quantite_affichee) - 1][0] * self.unite_x + self.unite_x * 0.25, self.solution[floor(quantite_affichee) - 1][1] * self.unite_y + self.unite_y * 0.25))
 
         pg.display.update()
 

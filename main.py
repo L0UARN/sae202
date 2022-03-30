@@ -3,8 +3,8 @@ from Solution import valider_solution, methode_maison, dfs_backtracking
 from Outils import position_vers_nom, nom_vers_position
 from Affichage import Echiquier
 
-hauteur = 8
-largeur = 8
+hauteur = 5
+largeur = 5
 graph = generer_graphe(hauteur, largeur)
 depart = (0, 0)
 
